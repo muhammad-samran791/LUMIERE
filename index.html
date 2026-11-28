@@ -1,139 +1,343 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0b0d">
-  <meta name="description" content="LUMIÈRE — an interactive cinematic instant camera, crafted with HTML, CSS and JavaScript.">
-  <title>LUMIÈRE — Capture a Moment</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <canvas id="dust" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="spotlight" aria-hidden="true"></div>
-  <main class="app">
-    <header class="masthead">
-      <div class="eyebrow"><span class="eyebrow-line"></span> AN INTERACTIVE MOTION EXPERIMENT <span class="eyebrow-line"></span></div>
-      <h1>LUMI<span class="e-accent">È</span>RE<span class="period">.</span></h1>
-      <p>Every moment deserves to be remembered.</p>
-    </header>
-
-    <section class="scene" aria-label="Interactive animated vintage instant camera">
-      <div class="halo halo-a" aria-hidden="true"></div>
-      <div class="halo halo-b" aria-hidden="true"></div>
-      <div class="orbit orbit-one" aria-hidden="true"></div>
-      <div class="orbit orbit-two" aria-hidden="true"></div>
-      <div class="table-glow" aria-hidden="true"></div>
-
-      <div class="polaroid" id="polaroid" aria-live="polite" aria-label="Developing instant photograph">
-        <div class="photo-paper">
-          <div class="photo-image" id="photoImage">
-            <!-- Three hand-drawn self-contained landscapes; nothing downloaded at runtime. -->
-            <svg class="landscape active" data-landscape="0" viewBox="0 0 440 330" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Golden mountain sunset">
-              <defs>
-                <linearGradient id="duskSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4d365d"/><stop offset=".42" stop-color="#ae5d6f"/><stop offset=".78" stop-color="#f2ac67"/><stop offset="1" stop-color="#f7dfad"/></linearGradient>
-                <linearGradient id="duskMountain" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#78627b"/><stop offset="1" stop-color="#323d55"/></linearGradient>
-                <linearGradient id="duskWater" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#db9476"/><stop offset="1" stop-color="#313c54"/></linearGradient>
-                <filter id="sunGlow"><feGaussianBlur stdDeviation="11"/></filter>
-              </defs>
-              <rect width="440" height="330" fill="url(#duskSky)"/>
-              <circle cx="299" cy="137" r="48" fill="#ffdfab" opacity=".4" filter="url(#sunGlow)"/>
-              <circle cx="299" cy="137" r="28" fill="#ffe4b5"/>
-              <path d="M0 205 53 166 84 185 153 100 207 176 245 146 312 208 362 171 440 211V330H0Z" fill="#a07882"/>
-              <path d="M0 235 79 194 136 213 222 123 284 210 339 188 440 223V330H0Z" fill="url(#duskMountain)"/>
-              <path d="m201 147 21-24 23 28-17-8-8 5-9-5z" fill="#eed1c8" opacity=".73"/>
-              <path d="M0 239q90-12 174 0t162-3 104 4v90H0Z" fill="url(#duskWater)"/>
-              <path d="M268 242q26 4 60 0m-40 9 28 1m-53 14h67m-50 10h39m-65 11h83" stroke="#ffe1ac" stroke-width="2.8" opacity=".63" stroke-linecap="round"/>
-              <path d="M0 261 32 251 49 263l37-21 33 19v69H0ZM440 268l-40-22-21 21-22-12-30 30v45h113Z" fill="#232d3e"/>
-              <path d="M15 263v-71m0 39-17-24m17 7 18-31m381 81v-88m0 46-22-27m22 10 23-38" stroke="#202b39" stroke-width="5" stroke-linecap="round"/>
-            </svg>
-            <svg class="landscape" data-landscape="1" viewBox="0 0 440 330" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Midnight city skyline">
-              <defs>
-                <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#071329"/><stop offset=".64" stop-color="#274568"/><stop offset="1" stop-color="#836e7b"/></linearGradient>
-                <linearGradient id="nightWater" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4d718b"/><stop offset="1" stop-color="#091b30"/></linearGradient>
-              </defs>
-              <rect width="440" height="330" fill="url(#nightSky)"/>
-              <circle cx="321" cy="76" r="34" fill="#f7e9c2" opacity=".17"/>
-              <circle cx="321" cy="76" r="24" fill="#f7e9c2"/>
-              <g fill="#fce8c5" opacity=".78"><circle cx="52" cy="42" r="1.7"/><circle cx="94" cy="91" r="1.2"/><circle cx="156" cy="49" r="1.2"/><circle cx="201" cy="20" r="1.5"/><circle cx="256" cy="66" r="1.4"/><circle cx="401" cy="42" r="1.2"/><circle cx="376" cy="114" r="1.5"/></g>
-              <path d="M0 233v-81h37v-29h30v40h22v-53h30v34h26V95h28v52h26v-36h41v48h25v-46h26v28h30V90h27v61h38v-24h40v106Z" fill="#111c36"/>
-              <path d="M0 236v-55h49v25h43v-52h37v54h41v-27h31v30h21v-72h46v67h34v-45h30v50h108v25Z" fill="#071429"/>
-              <g fill="#f4c98e" opacity=".82"><path d="M13 165h4v7h-4zm15 0h4v7h-4zm28-26h4v7h-4zm54-14h4v8h-4zm47-17h4v8h-4zm17 7h4v8h-4zm52 9h4v8h-4zm19 13h4v8h-4zm40-11h4v8h-4zm45-20h4v8h-4zm16 18h4v8h-4zm55 20h4v8h-4z"/></g>
-              <path d="M0 231h440v99H0Z" fill="url(#nightWater)"/>
-              <path d="M29 245h19m20 15h38m17-16h16m18 29h23m31-26h19m21 32h40m15-35h15m28 20h30m-312 40h37m81-5h22m105-4h43" stroke="#d5a97b" stroke-linecap="round" stroke-width="3" opacity=".58"/>
-            </svg>
-            <svg class="landscape" data-landscape="2" viewBox="0 0 440 330" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Amber desert dunes">
-              <defs>
-                <linearGradient id="desertSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#283950"/><stop offset=".48" stop-color="#b97966"/><stop offset="1" stop-color="#f5d39a"/></linearGradient>
-                <linearGradient id="desertSand" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f8d5a2"/><stop offset="1" stop-color="#9e5949"/></linearGradient>
-              </defs>
-              <rect width="440" height="330" fill="url(#desertSky)"/>
-              <circle cx="116" cy="128" r="42" fill="#ffe1ad" opacity=".22"/>
-              <circle cx="116" cy="128" r="27" fill="#ffe3b7"/>
-              <path d="M0 222Q90 153 173 217T440 192V330H0Z" fill="#eab588"/>
-              <path d="M0 249q80-47 146-14t167-18q73-45 127 8v105H0Z" fill="#c78b6d"/>
-              <path d="M0 313q125-129 238-68 83 42 202-23v108H0Z" fill="url(#desertSand)"/>
-              <path d="M0 330q110-50 215-30 82 15 225-20v50Z" fill="#a85e52" opacity=".8"/>
-              <path d="M324 269v-70m0 33-19-9v-20m19 22 23-12v-20" fill="none" stroke="#3d403e" stroke-width="7" stroke-linecap="round"/>
-              <path d="M64 301c40-8 79-6 111 1m86-49c25-8 52-8 76-6" fill="none" stroke="#f5c797" stroke-width="2" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="photo-foot"><span id="photoCaption">01 / GOLDEN HOUR</span><span class="photo-star">✦</span></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0b0d" />
+    <meta
+      name="description"
+      content="LUMIÈRE — an interactive cinematic instant camera, crafted with HTML, CSS and JavaScript."
+    />
+    <title>LUMIÈRE — Capture a Moment</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="dust" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="spotlight" aria-hidden="true"></div>
+    <main class="app">
+      <header class="masthead">
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span> AN INTERACTIVE MOTION EXPERIMENT
+          <span class="eyebrow-line"></span>
         </div>
-      </div>
+        <h1>
+          LUMI<span class="e-accent">È</span>RE<span class="period">.</span>
+        </h1>
+        <p>Every moment deserves to be remembered.</p>
+      </header>
 
-      <div class="camera-float">
-        <div class="camera-wrap" id="camera">
-          <div class="top-metal" aria-hidden="true">
-            <div class="shutter-button"></div><div class="winder"></div><div class="hot-shoe"></div><div class="dial"><span></span></div>
+      <section
+        class="scene"
+        aria-label="Interactive animated vintage instant camera"
+      >
+        <div class="halo halo-a" aria-hidden="true"></div>
+        <div class="halo halo-b" aria-hidden="true"></div>
+        <div class="orbit orbit-one" aria-hidden="true"></div>
+        <div class="orbit orbit-two" aria-hidden="true"></div>
+        <div class="table-glow" aria-hidden="true"></div>
+
+        <div
+          class="polaroid"
+          id="polaroid"
+          aria-live="polite"
+          aria-label="Developing instant photograph"
+        >
+          <div class="photo-paper">
+            <div class="photo-image" id="photoImage">
+              <!-- Three hand-drawn self-contained landscapes; nothing downloaded at runtime. -->
+              <svg
+                class="landscape active"
+                data-landscape="0"
+                viewBox="0 0 440 330"
+                preserveAspectRatio="xMidYMid slice"
+                role="img"
+                aria-label="Golden mountain sunset"
+              >
+                <defs>
+                  <linearGradient id="duskSky" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#4d365d" />
+                    <stop offset=".42" stop-color="#ae5d6f" />
+                    <stop offset=".78" stop-color="#f2ac67" />
+                    <stop offset="1" stop-color="#f7dfad" />
+                  </linearGradient>
+                  <linearGradient id="duskMountain" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#78627b" />
+                    <stop offset="1" stop-color="#323d55" />
+                  </linearGradient>
+                  <linearGradient id="duskWater" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#db9476" />
+                    <stop offset="1" stop-color="#313c54" />
+                  </linearGradient>
+                  <filter id="sunGlow">
+                    <feGaussianBlur stdDeviation="11" />
+                  </filter>
+                </defs>
+                <rect width="440" height="330" fill="url(#duskSky)" />
+                <circle
+                  cx="299"
+                  cy="137"
+                  r="48"
+                  fill="#ffdfab"
+                  opacity=".4"
+                  filter="url(#sunGlow)"
+                />
+                <circle cx="299" cy="137" r="28" fill="#ffe4b5" />
+                <path
+                  d="M0 205 53 166 84 185 153 100 207 176 245 146 312 208 362 171 440 211V330H0Z"
+                  fill="#a07882"
+                />
+                <path
+                  d="M0 235 79 194 136 213 222 123 284 210 339 188 440 223V330H0Z"
+                  fill="url(#duskMountain)"
+                />
+                <path
+                  d="m201 147 21-24 23 28-17-8-8 5-9-5z"
+                  fill="#eed1c8"
+                  opacity=".73"
+                />
+                <path
+                  d="M0 239q90-12 174 0t162-3 104 4v90H0Z"
+                  fill="url(#duskWater)"
+                />
+                <path
+                  d="M268 242q26 4 60 0m-40 9 28 1m-53 14h67m-50 10h39m-65 11h83"
+                  stroke="#ffe1ac"
+                  stroke-width="2.8"
+                  opacity=".63"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M0 261 32 251 49 263l37-21 33 19v69H0ZM440 268l-40-22-21 21-22-12-30 30v45h113Z"
+                  fill="#232d3e"
+                />
+                <path
+                  d="M15 263v-71m0 39-17-24m17 7 18-31m381 81v-88m0 46-22-27m22 10 23-38"
+                  stroke="#202b39"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <svg
+                class="landscape"
+                data-landscape="1"
+                viewBox="0 0 440 330"
+                preserveAspectRatio="xMidYMid slice"
+                role="img"
+                aria-label="Midnight city skyline"
+              >
+                <defs>
+                  <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#071329" />
+                    <stop offset=".64" stop-color="#274568" />
+                    <stop offset="1" stop-color="#836e7b" />
+                  </linearGradient>
+                  <linearGradient id="nightWater" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#4d718b" />
+                    <stop offset="1" stop-color="#091b30" />
+                  </linearGradient>
+                </defs>
+                <rect width="440" height="330" fill="url(#nightSky)" />
+                <circle cx="321" cy="76" r="34" fill="#f7e9c2" opacity=".17" />
+                <circle cx="321" cy="76" r="24" fill="#f7e9c2" />
+                <g fill="#fce8c5" opacity=".78">
+                  <circle cx="52" cy="42" r="1.7" />
+                  <circle cx="94" cy="91" r="1.2" />
+                  <circle cx="156" cy="49" r="1.2" />
+                  <circle cx="201" cy="20" r="1.5" />
+                  <circle cx="256" cy="66" r="1.4" />
+                  <circle cx="401" cy="42" r="1.2" />
+                  <circle cx="376" cy="114" r="1.5" />
+                </g>
+                <path
+                  d="M0 233v-81h37v-29h30v40h22v-53h30v34h26V95h28v52h26v-36h41v48h25v-46h26v28h30V90h27v61h38v-24h40v106Z"
+                  fill="#111c36"
+                />
+                <path
+                  d="M0 236v-55h49v25h43v-52h37v54h41v-27h31v30h21v-72h46v67h34v-45h30v50h108v25Z"
+                  fill="#071429"
+                />
+                <g fill="#f4c98e" opacity=".82">
+                  <path
+                    d="M13 165h4v7h-4zm15 0h4v7h-4zm28-26h4v7h-4zm54-14h4v8h-4zm47-17h4v8h-4zm17 7h4v8h-4zm52 9h4v8h-4zm19 13h4v8h-4zm40-11h4v8h-4zm45-20h4v8h-4zm16 18h4v8h-4zm55 20h4v8h-4z"
+                  />
+                </g>
+                <path d="M0 231h440v99H0Z" fill="url(#nightWater)" />
+                <path
+                  d="M29 245h19m20 15h38m17-16h16m18 29h23m31-26h19m21 32h40m15-35h15m28 20h30m-312 40h37m81-5h22m105-4h43"
+                  stroke="#d5a97b"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                  opacity=".58"
+                />
+              </svg>
+              <svg
+                class="landscape"
+                data-landscape="2"
+                viewBox="0 0 440 330"
+                preserveAspectRatio="xMidYMid slice"
+                role="img"
+                aria-label="Amber desert dunes"
+              >
+                <defs>
+                  <linearGradient id="desertSky" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#283950" />
+                    <stop offset=".48" stop-color="#b97966" />
+                    <stop offset="1" stop-color="#f5d39a" />
+                  </linearGradient>
+                  <linearGradient id="desertSand" x1="0" y1="0" x2="0" y2="1">
+                    <stop stop-color="#f8d5a2" />
+                    <stop offset="1" stop-color="#9e5949" />
+                  </linearGradient>
+                </defs>
+                <rect width="440" height="330" fill="url(#desertSky)" />
+                <circle cx="116" cy="128" r="42" fill="#ffe1ad" opacity=".22" />
+                <circle cx="116" cy="128" r="27" fill="#ffe3b7" />
+                <path d="M0 222Q90 153 173 217T440 192V330H0Z" fill="#eab588" />
+                <path
+                  d="M0 249q80-47 146-14t167-18q73-45 127 8v105H0Z"
+                  fill="#c78b6d"
+                />
+                <path
+                  d="M0 313q125-129 238-68 83 42 202-23v108H0Z"
+                  fill="url(#desertSand)"
+                />
+                <path
+                  d="M0 330q110-50 215-30 82 15 225-20v50Z"
+                  fill="#a85e52"
+                  opacity=".8"
+                />
+                <path
+                  d="M324 269v-70m0 33-19-9v-20m19 22 23-12v-20"
+                  fill="none"
+                  stroke="#3d403e"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M64 301c40-8 79-6 111 1m86-49c25-8 52-8 76-6"
+                  fill="none"
+                  stroke="#f5c797"
+                  stroke-width="2"
+                  opacity=".5"
+                />
+              </svg>
+            </div>
+            <div class="photo-foot">
+              <span id="photoCaption">01 / GOLDEN HOUR</span
+              ><span class="photo-star">✦</span>
+            </div>
           </div>
-          <div class="camera-shadow" aria-hidden="true"></div>
-          <div class="camera-body">
-            <div class="top-lip"></div>
-            <div class="leather-panel"></div>
-            <div class="body-highlight"></div>
-            <div class="corner corner-tl"></div><div class="corner corner-tr"></div><div class="corner corner-bl"></div><div class="corner corner-br"></div>
-            <div class="film-slot"></div>
-            <div class="viewfinder"><div class="viewfinder-inner"></div></div>
-            <div class="camera-lettering"><small>ANALOGUE</small><span>35<em>mm</em></span></div>
-            <div class="little-red-light"></div>
-            <div class="camera-screw screw-left"></div><div class="camera-screw screw-right"></div>
-            <div class="lens-assembly" aria-hidden="true">
-              <div class="lens-outer">
-                <div class="lens-grip"></div>
-                <div class="lens-metal">
-                  <div class="lens-label lens-label-top">LENS · F / 1.8</div>
-                  <div class="lens-glass">
-                    <div class="glass-refraction"></div><div class="lens-iris"></div><div class="lens-flare"></div>
-                    <div class="lens-specular"></div>
-                    <div class="lens-core"></div>
+        </div>
+
+        <div class="camera-float">
+          <div class="camera-wrap" id="camera">
+            <div class="top-metal" aria-hidden="true">
+              <div class="shutter-button"></div>
+              <div class="winder"></div>
+              <div class="hot-shoe"></div>
+              <div class="dial"><span></span></div>
+            </div>
+            <div class="camera-shadow" aria-hidden="true"></div>
+            <div class="camera-body">
+              <div class="top-lip"></div>
+              <div class="leather-panel"></div>
+              <div class="body-highlight"></div>
+              <div class="corner corner-tl"></div>
+              <div class="corner corner-tr"></div>
+              <div class="corner corner-bl"></div>
+              <div class="corner corner-br"></div>
+              <div class="film-slot"></div>
+              <div class="viewfinder"><div class="viewfinder-inner"></div></div>
+              <div class="camera-lettering">
+                <small>ANALOGUE</small><span>35<em>mm</em></span>
+              </div>
+              <div class="little-red-light"></div>
+              <div class="camera-screw screw-left"></div>
+              <div class="camera-screw screw-right"></div>
+              <div class="lens-assembly" aria-hidden="true">
+                <div class="lens-outer">
+                  <div class="lens-grip"></div>
+                  <div class="lens-metal">
+                    <div class="lens-label lens-label-top">LENS · F / 1.8</div>
+                    <div class="lens-glass">
+                      <div class="glass-refraction"></div>
+                      <div class="lens-iris"></div>
+                      <div class="lens-flare"></div>
+                      <div class="lens-specular"></div>
+                      <div class="lens-core"></div>
+                    </div>
+                    <div class="lens-label lens-label-bottom">
+                      50 MM · AUTO FOCUS
+                    </div>
                   </div>
-                  <div class="lens-label lens-label-bottom">50 MM · AUTO FOCUS</div>
                 </div>
               </div>
+              <div class="camera-bottom-rail"></div>
             </div>
-            <div class="camera-bottom-rail"></div>
           </div>
         </div>
-      </div>
-      <div class="floor-shadow" aria-hidden="true"></div>
-      <div class="flash" id="flash" aria-hidden="true"></div>
-      <div class="flash-ring" id="flashRing" aria-hidden="true"></div>
-      <div class="microcopy micro-left">DESIGNED IN LIGHT <span>✧</span></div>
-      <div class="microcopy micro-right">A FRAME IN TIME <span>✧</span></div>
-    </section>
+        <div class="floor-shadow" aria-hidden="true"></div>
+        <div class="flash" id="flash" aria-hidden="true"></div>
+        <div class="flash-ring" id="flashRing" aria-hidden="true"></div>
+        <div class="microcopy micro-left">DESIGNED IN LIGHT <span>✧</span></div>
+        <div class="microcopy micro-right">A FRAME IN TIME <span>✧</span></div>
+      </section>
 
-    <div class="control-area">
-      <div class="scene-picker" aria-label="Photo scene selector"><span class="picker-caption">SCENE</span><button id="scenePrev" class="tiny-arrow" type="button" aria-label="Previous scene">‹</button><span id="sceneName">GOLDEN HOUR</span><button id="sceneNext" class="tiny-arrow" type="button" aria-label="Next scene">›</button></div>
-      <div class="actions">
-        <button class="button-secondary" id="resetBtn" type="button">↺ <span>RESET</span></button>
-        <button class="button-primary" id="captureBtn" type="button"><span class="button-icon">✦</span><span id="captureText">CAPTURE MOMENT</span><span class="button-arrow">↗</span></button>
+      <div class="control-area">
+        <div class="scene-picker" aria-label="Photo scene selector">
+          <span class="picker-caption">SCENE</span
+          ><button
+            id="scenePrev"
+            class="tiny-arrow"
+            type="button"
+            aria-label="Previous scene"
+          >
+            ‹</button
+          ><span id="sceneName">GOLDEN HOUR</span
+          ><button
+            id="sceneNext"
+            class="tiny-arrow"
+            type="button"
+            aria-label="Next scene"
+          >
+            ›
+          </button>
+        </div>
+        <div class="actions">
+          <button class="button-secondary" id="resetBtn" type="button">
+            ↺ <span>RESET</span>
+          </button>
+          <button class="button-primary" id="captureBtn" type="button">
+            <span class="button-icon">✦</span
+            ><span id="captureText">CAPTURE MOMENT</span
+            ><span class="button-arrow">↗</span>
+          </button>
+        </div>
+        <p class="hint" id="hint">
+          A little magic, one click away. <span>PRESS SPACE TO CAPTURE</span>
+        </p>
       </div>
-      <p class="hint" id="hint">A little magic, one click away. <span>PRESS SPACE TO CAPTURE</span></p>
-    </div>
-    <footer class="footer"><span>MADE OF PIXELS & POSSIBILITY</span><span>NO IMAGES · NO LIBRARIES · JUST CODE</span></footer>
-  </main>
-  <script src="script.js" defer></script>
-</body>
+
+      <footer class="footer">
+        <div class="footer-top">
+          <span>MADE OF PIXELS & POSSIBILITY</span>
+          <span>NO IMAGES · NO LIBRARIES · JUST CODE</span>
+        </div>
+
+        <p class="footer-credit">
+          &copy; 2026
+          <a
+            href="https://codediamond.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Muhammad Samran (codediamond.dev)
+          </a>
+          · All Rights Reserved.
+        </p>
+      </footer>
+    </main>
+    <script src="script.js" defer></script>
+  </body>
 </html>
